@@ -181,20 +181,20 @@ def testSpeedAndReport():
     maxNumberOfTests = 10
     start = True
     while start:
-        userInput1 = raw_input('Enter number 1 to start the app: ')
-        if userInput1.lower().strip(' ') == 'quit':
+        userInput = raw_input('Enter number 1 to start the app: ')
+        if userInput.lower().strip(' ') == 'quit':
             print '\n' + 'Thank you for using "Report Your Low Speed To Comcast" app!'
             exit()
         try:
-            userInput1 = int(userInput1)
-            if userInput1 == 1:
+            userInput = int(userInput)
+            if userInput == 1:
                 print '-----------------------------------------------------------------------'
                 scheduled_speed_test(maxNumberOfTests)
                 start = False
         except ValueError:
-            if userInput1 == '':
+            if userInput == '':
                 print '\n','Input value can not be Null/Empty', '\n'
 
-        print '"', userInput1, '"', 'can not be accepted. You can enter only number 1 to start the app, please try again'
+        print '"', userInput, '"', 'can not be accepted. You can enter only number 1 to start the app, please try again'
         print '-----------------------------------------------------------------------'
         start = True
