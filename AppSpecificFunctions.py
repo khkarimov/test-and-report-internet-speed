@@ -9,7 +9,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 cwd = os.getcwd() # cwd = current work directory
-print cwd
 
 def configureApi():
     # Fill in the values noted in previous step here
@@ -175,8 +174,6 @@ def testSpeedAndReport():
         print '-----------------------------------------------------------------------'
         start = True
 
-testSpeedAndReport()
-
 def deleteLastFiveTweets():
     counter = 10
     i = 1
@@ -186,5 +183,3 @@ def deleteLastFiveTweets():
             i += 1
     except:
         print 'No More Tweet To Delete'
-
-# deleteLastFiveTweets()
