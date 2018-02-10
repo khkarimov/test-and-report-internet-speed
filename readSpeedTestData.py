@@ -87,7 +87,7 @@ def askUserToProvideASTL():
                 return userInput
         except:
             if userInput == '':
-                print '\n', '\n', '\n', 'I KNEW YOU WOULD TRY TO PASS NULL, YOU SNEAKY FUCK! I GOT YOU, YOU POOR BUSTARD! :)', '\n', '\n', '\n'
+                print '\n', 'Input value can not be Null/Empty', '\n'
             else:
                 # if len(userInput) > 10:
                 #     print '"' + userInput[:10] + '..."', 'can not be accepted. You can enter only numbers, please try again'
@@ -127,7 +127,7 @@ def test_and_write_speed():
 
 def scheduled_speed_test(maxNumberOfTests):
     counter = 1
-    while counter <= maxNumberOfTests:
+    while counter < maxNumberOfTests:
         print '\n', 'TEST #', counter, 'STARTED'
         result = test_and_write_speed()
         if result:
@@ -142,16 +142,19 @@ def scheduled_speed_test(maxNumberOfTests):
             time.sleep(1)
             print '\n', 'TEST FAILED'
             print '-----------------------------------------------------------------------'
+    if counter == maxNumberOfTests:
+            print 'Default maxNumberOfTests set to:', maxNumberOfTests - 1, ', and you reached the max run limit'
+            print 'Run app again if you would to test internet speed more'
+            sys.exit()
 
-
-def intro():
-    print 'This app tests internet speed. Comcast should provide 70MB maximum speed. '
+def testSpeedAndReport():
+    print 'This app tests internet speed. Comcast should provide 70MB maximum speed.'
     print 'When you run this app, app asks you to provide acceptable speed limit(ASL) and '
     print 'it tests whether current speed is equal to or more from provided ASL.'
     print 'if test result is less than ASL then this app should generate a twitter with test result.'
     print 'Otherwise, it simply displays test results' + '\n'
 
-    maxNumberOfTests = 100
+    maxNumberOfTests = 10
     start = True
     while start:
         userInput1 = raw_input('Enter number 1 to start the app: ')
@@ -166,16 +169,16 @@ def intro():
                 start = False
         except ValueError:
             if userInput1 == '':
-                print '\n', '\n', '\n', 'I KNEW YOU WOULD TRY TO PASS NULL, YOU SNEAKY FUCK! I GOT YOU, YOU POOR BUSTARD! :)', '\n', '\n', '\n'
+                print '\n','Input value can not be Null/Empty', '\n'
 
         print '"', userInput1, '"', 'can not be accepted. You can enter only number 1 to start the app, please try again'
         print '-----------------------------------------------------------------------'
         start = True
 
-intro()
+testSpeedAndReport()
 
 def deleteLastFiveTweets():
-    counter = 13
+    counter = 10
     i = 1
     try:
         while i < counter:
