@@ -20,9 +20,9 @@ def configureApi():
     return api
 
 
-def postATweet(downloadSpeed):
+def postATweet(downloadSpeed, maxDownloadSpeedLimit):
     api = configureApi()
-    tweet = "My current download speed: " + downloadSpeed + "MB, but my monthly plan promises 70MB download speed"
+    tweet = "My current download speed: " + downloadSpeed + "MB, but my monthly plan promises", str(maxDownloadSpeedLimit), "download speed"
     status = api.update_status(status=tweet)
     json_str = json.dumps(status._json)
     data = json.loads(json_str)
@@ -55,26 +55,20 @@ def openLinkInBrowser(tweetId, downloadSpeed):
         print "Actual text in UI:", elem.text[:40], '...'
     driver.quit()
 
-def askUserToProvideASTL():
+def askUserToProvideASTL(maxDownloadSpeedLimit):
+    maxDownloadSpeedLimit = float(maxDownloadSpeedLimit)
     tryAgain = True
     while tryAgain:
         try:
-            userInput = raw_input('Enter the minimum acceptable speed: ' +'\n')
-            if userInput == 'seventy':
-                print 'You typed 70 and i take it BUT never test like that! i make an exception this time just to confuse as fuck'
-                tryAgain = False
-                userInput = 70
-            elif userInput == 'quit':
+            userInput = raw_input('Enter the MINIMUM acceptable speed or type "quit" to close the application: ' +'\n')
+            if userInput.lower().strip(' ') == 'quit':
                 return None
                 sys.exit()
-            # elif len(userInput) > 6:
-            #     tryAgain = False
-            #     print 'The length of your input can not be more than 6 digits'
-            #     sys.exit(1)
+
             userInput = float(userInput)
 
-            if userInput >= 70.00:
-                print 'Maximum expected speed is 70Mb. ASL should be less than 70Mb.' + '\n'
+            if userInput >= maxDownloadSpeedLimit:
+                print 'Maximum expected speed is:', maxDownloadSpeedLimit, 'ASL should be less than', maxDownloadSpeedLimit, '\n'
                 tryAgain = True
             elif userInput <= 0.0:
                 print 'Minimum acceptable speed can NOT be less than 0 or equal to' + '\n'
@@ -91,12 +85,39 @@ def askUserToProvideASTL():
                 # if len(userInput) > 10:
                 #     print '"' + userInput[:10] + '..."', 'can not be accepted. You can enter only numbers, please try again'
                 # else:
-                print '"' + userInput + '"', 'can not be accepted. You can enter only numbers, please try again', '\n'
+                print '"', userInput, '"', 'can not be accepted. You can enter only numbers, please try again', '\n'
             tryAgain = True
 
+def askUserToProvideMaxDownloadSpeedLimit():
+    tryAgain = True
+    while tryAgain:
+        try:
+            userInput = raw_input('Enter the MAXIMUM internet download speed: ' + '\n')
 
-def test_and_write_speed():
-    acceptableSpeedLimit = askUserToProvideASTL()
+            userInput = int(userInput)
+
+            if len(str(userInput)) > 3:
+                print 'Maximum download speed should not be more than 3 digits. Try again.' + '\n'
+                tryAgain = True
+            elif userInput <= 0:
+                print 'Maximum download speed can NOT be less than 0 or equal to' + '\n'
+                tryAgain = True
+            else:
+                print '-----------------------------------------------------------------------'
+                print userInput, 'is accepted as maximum download speed limit'
+                tryAgain = False
+
+                maxDownloadSpeedLimit = userInput
+                return maxDownloadSpeedLimit
+        except:
+            if userInput == '':
+                print '\n', 'Input value can not be Null/Empty', '\n'
+            else:
+                print '"', userInput, '"', 'can not be accepted. You can enter only full numbers, please try again', '\n'
+            tryAgain = True
+
+def test_and_write_speed(maxDownloadSpeedLimit):
+    acceptableSpeedLimit = askUserToProvideASTL(maxDownloadSpeedLimit)
 
     if acceptableSpeedLimit is None:
         print '\n' + 'Thank you for using "Report Your Low Speed To Comcast" app!'
@@ -115,7 +136,7 @@ def test_and_write_speed():
                 print '#########################################'
                 print "DOWNLOAD SPEED:", data['speeds']['download'], ". This data is being posted to Tweeter."
                 downloadSpeed = str(data['speeds']['download'])
-                tweetId = postATweet(downloadSpeed)
+                tweetId = postATweet(downloadSpeed, maxDownloadSpeedLimit)
                 print "Link: https://twitter.com/ComcastUser3301/status/" + tweetId
                 print '#########################################'
                 openLinkInBrowser(tweetId, downloadSpeed)
@@ -125,10 +146,12 @@ def test_and_write_speed():
         return False
 
 def scheduled_speed_test(maxNumberOfTests):
+    maxDownloadSpeedLimit = askUserToProvideMaxDownloadSpeedLimit()
+
     counter = 1
     while counter < maxNumberOfTests:
         print '\n', 'TEST #', counter, 'STARTED'
-        result = test_and_write_speed()
+        result = test_and_write_speed(maxDownloadSpeedLimit)
         if result:
             print 'END OF TEST'
             if maxNumberOfTests != counter:
@@ -147,17 +170,19 @@ def scheduled_speed_test(maxNumberOfTests):
             sys.exit()
 
 def testSpeedAndReport():
-    print 'This app tests internet speed. Comcast should provide 70MB maximum speed.'
+    print 'This app tests internet speed. Internet provider should provide 70MB download speed maximum.'
+    print 'Maximum download speed varies on every user based on purchased plan.'
+    print 'Check your internet service contract details to find out your maximum download speed.'
     print 'When you run this app, app asks you to provide acceptable speed limit(ASL) and '
     print 'it tests whether current speed is equal to or more from provided ASL.'
-    print 'if test result is less than ASL then this app should generate a twitter with test result.'
-    print 'Otherwise, it simply displays test results' + '\n'
+    print 'if test result is less than ASL then this app generates tweeter post with test result.'
+    print 'Otherwise, it simply displays test results without posting it in tweeter.' + '\n'
 
     maxNumberOfTests = 10
     start = True
     while start:
         userInput1 = raw_input('Enter number 1 to start the app: ')
-        if userInput1 == 'quit':
+        if userInput1.lower().strip(' ') == 'quit':
             print '\n' + 'Thank you for using "Report Your Low Speed To Comcast" app!'
             exit()
         try:
