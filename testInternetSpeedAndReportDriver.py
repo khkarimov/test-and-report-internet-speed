@@ -13,7 +13,7 @@ def deleteLastFiveTweets():
     except:
         print 'No More Tweet To Delete'
 
-# deleteLastFiveTweets()
+deleteLastFiveTweets()
 
 # This functions tests internet speed and reports the results in tweet if internet speed is lower than expected.
-testSpeedAndReport()
+# testSpeedAndReport()
