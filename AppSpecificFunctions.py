@@ -47,7 +47,6 @@ def deleteStatusInTwitter():
 
 def openLinkInBrowser(tweetId, downloadSpeed):
     driver = webdriver.Chrome()
-    # driver.get("https://twitter.com/ComcastUser3301/status/" + tweetId)
     driver.get(env_variable.linkToTwitter + tweetId)
     try:
         elem = driver.find_element_by_class_name("TweetTextSize--jumbo")
@@ -218,8 +217,9 @@ def deleteLastFiveTweets():
     counter = 5
     i = 1
     try:
-        while i < counter:
-            i, deleteStatusInTwitter()
+        while i <= counter:
+            print i
+            deleteStatusInTwitter()
             i += 1
     except:
         print 'No More Tweet To Delete'
