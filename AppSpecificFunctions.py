@@ -46,15 +46,19 @@ def deleteStatusInTweeter():
 def openLinkInBrowser(tweetId, downloadSpeed):
     driver = webdriver.Chrome()
     driver.get("https://twitter.com/ComcastUser3301/status/" + tweetId)
-    elem = driver.find_element_by_class_name("TweetTextSize--jumbo")
+    try:
+        elem = driver.find_element_by_class_name("TweetTextSize--jumbo")
 
-    time.sleep(3)
-    if downloadSpeed in elem.text:
-        print "UI test: PASSED"
-    else:
-        print "UI test: FAILED"
-        print "Actual text in UI:", elem.text[:40], '...'
-    driver.quit()
+        time.sleep(3)
+        if downloadSpeed in elem.text:
+            print "UI test: PASSED"
+        else:
+            print "UI test: FAILED"
+            print "Actual text in UI:", elem.text[:40], '...'
+        driver.quit()
+    except:
+        print 'openLinkInBrowser function failed. Exception Thrown'
+        driver.quit()
 
 def askUserToProvideASTL(maxDownloadSpeedLimit):
     maxDownloadSpeedLimit = float(maxDownloadSpeedLimit)
@@ -150,7 +154,7 @@ def test_and_write_speed(maxDownloadSpeedLimit):
                 openLinkInBrowser(tweetId, downloadSpeed)
             return True
     except:
-        print 'EXCEPTION THROWN IN test_and_write_speed function'
+        print 'test_and_write_speed function failed. Exception Thrown'
         return False
 
 def scheduled_speed_test(maxNumberOfTests):
@@ -168,7 +172,7 @@ def scheduled_speed_test(maxNumberOfTests):
                 time.sleep(5)
             counter += 1
         else:
-            print 'Test #', counter, 'Failed, will try again in 2 seconds'
+            print 'Test #', counter, 'Failed, test will start again in 2 seconds'
             time.sleep(2)
             print '\n', 'TEST FAILED'
             print '-----------------------------------------------------------------------'
