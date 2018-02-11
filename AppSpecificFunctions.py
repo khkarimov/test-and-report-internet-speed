@@ -22,7 +22,8 @@ def configureApi():
 
 def postATweet(downloadSpeed, maxDownloadSpeedLimit):
     api = configureApi()
-    tweet = "My current download speed: " + downloadSpeed + "MB, but my monthly plan promises", str(maxDownloadSpeedLimit), "download speed"
+    maxDownloadSpeedLimit = str(maxDownloadSpeedLimit)
+    tweet = "My current download speed: " + downloadSpeed + "MB, but my monthly plan promises: " + maxDownloadSpeedLimit + "MB download speed"
     status = api.update_status(status=tweet)
     json_str = json.dumps(status._json)
     data = json.loads(json_str)
@@ -155,13 +156,13 @@ def scheduled_speed_test(maxNumberOfTests):
         if result:
             print 'END OF TEST'
             if maxNumberOfTests != counter:
-                print 'Next test will be performed in 10 second'
+                print 'Next test will be performed in 5 second'
                 print '-----------------------------------------------------------------------'
-                time.sleep(2)
+                time.sleep(5)
             counter += 1
         else:
-            print 'Test #', counter, 'Failed, will try again in 5 seconds'
-            time.sleep(1)
+            print 'Test #', counter, 'Failed, will try again in 2 seconds'
+            time.sleep(2)
             print '\n', 'TEST FAILED'
             print '-----------------------------------------------------------------------'
     if counter == maxNumberOfTests:
