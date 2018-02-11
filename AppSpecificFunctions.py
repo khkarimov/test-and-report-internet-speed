@@ -1,10 +1,10 @@
 import os
 import sys
 import json
-from Naked.toolshed.shell import execute_js, muterun_js
 import time
 from datetime import datetime
 import tweepy
+import pyspeedtest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
@@ -117,6 +117,17 @@ def askUserToProvideMaxDownloadSpeedLimit():
                 print '"', userInput, '"', 'can not be accepted. You can enter only full numbers, please try again', '\n'
             tryAgain = True
 
+def runSpeedTest():
+    speedTest = pyspeedtest.SpeedTest()
+    try:
+        downloadSpeed = float(round(speedTest.download()/1048576, 2))
+        return downloadSpeed
+    except:
+        print 'Speed Test failed. Please check your internet connection'
+        return None
+
+
+
 def test_and_write_speed(maxDownloadSpeedLimit):
     acceptableSpeedLimit = askUserToProvideASTL(maxDownloadSpeedLimit)
 
@@ -124,19 +135,15 @@ def test_and_write_speed(maxDownloadSpeedLimit):
         print '\n' + 'Thank you for using "Report Your Low Speed To Comcast" app!'
         sys.exit()
     print 'speedtest.net in progress..'
-    response = execute_js(cwd + '\dev\speedtest.js')
-    data = json.load(open(cwd + '\speedTestResult.json'))
     try:
-        if 'ENOTFOUND' not in data:
+        speedTestResult = runSpeedTest()
+        if speedTestResult is not None:
             print str(datetime.now())
-            data = json.load(open(cwd + '\speedTestResult.json'))
-            print 'download speed:', data['speeds']['download']
-            print 'upload speed:', data['speeds']['upload']
-
-            if float(data['speeds']['download']) <= acceptableSpeedLimit:
+            print '\n', 'Current download speed:', speedTestResult
+            if speedTestResult <= acceptableSpeedLimit:
                 print '#########################################'
-                print "DOWNLOAD SPEED:", data['speeds']['download'], ". This data is being posted to Tweeter."
-                downloadSpeed = str(data['speeds']['download'])
+                print "DOWNLOAD SPEED:", speedTestResult, ". This data is being posted to Tweeter."
+                downloadSpeed = str(speedTestResult)
                 tweetId = postATweet(downloadSpeed, maxDownloadSpeedLimit)
                 print "Link: https://twitter.com/ComcastUser3301/status/" + tweetId
                 print '#########################################'
