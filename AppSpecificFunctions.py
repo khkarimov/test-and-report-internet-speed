@@ -212,3 +212,14 @@ def testSpeedAndReport():
         print '"', userInput, '"', 'can not be accepted. You can enter only number 1 to start the app, please try again'
         print '-----------------------------------------------------------------------'
         start = True
+
+
+def deleteLastFiveTweets():
+    counter = 5
+    i = 1
+    try:
+        while i < counter:
+            i, deleteStatusInTweeter()
+            i += 1
+    except:
+        print 'No More Tweet To Delete'
