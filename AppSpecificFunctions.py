@@ -7,6 +7,7 @@ import tweepy
 import pyspeedtest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import env_variable
 
 cwd = os.getcwd() # cwd = current work directory
 
@@ -28,6 +29,7 @@ def postATweet(downloadSpeed, maxDownloadSpeedLimit):
     json_str = json.dumps(status._json)
     data = json.loads(json_str)
     print 'Successfully tweeted! Tweet Id:', data['id']
+    print 'Link:' + env_variable.linkToTweeter + str(data['id'])
     with open(cwd + '\status.json', 'w') as outfile:
         json.dump(data, outfile)
     return str(data['id'])
@@ -45,15 +47,16 @@ def deleteStatusInTweeter():
 
 def openLinkInBrowser(tweetId, downloadSpeed):
     driver = webdriver.Chrome()
-    driver.get("https://twitter.com/ComcastUser3301/status/" + tweetId)
+    # driver.get("https://twitter.com/ComcastUser3301/status/" + tweetId)
+    driver.get(env_variable.linkToTweeter + tweetId)
     try:
         elem = driver.find_element_by_class_name("TweetTextSize--jumbo")
 
         time.sleep(3)
         if downloadSpeed in elem.text:
-            print "UI test: PASSED"
+            print "Visual Confirmation: Verified!"
         else:
-            print "UI test: FAILED"
+            print "Visual Confirmation: FAILED"
             print "Actual text in UI:", elem.text[:40], '...'
         driver.quit()
     except:
@@ -149,7 +152,6 @@ def test_and_write_speed(maxDownloadSpeedLimit):
                 print "DOWNLOAD SPEED:", speedTestResult, ". This data is being posted to Tweeter."
                 downloadSpeed = str(speedTestResult)
                 tweetId = postATweet(downloadSpeed, maxDownloadSpeedLimit)
-                print "Link: https://twitter.com/ComcastUser3301/status/" + tweetId
                 print '#########################################'
                 openLinkInBrowser(tweetId, downloadSpeed)
             return True
