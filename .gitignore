@@ -166,7 +166,7 @@ venv.bak/
 dev/
 speedTestResult.json
 status.json
-tweeter_config.json
+twitter_config.json
 
 
 # mypy
