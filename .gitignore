@@ -163,8 +163,6 @@ venv.bak/
 
 # mkdocs documentation
 /site
-dev/
-speedTestResult.json
 status.json
 twitter_config.json
 
