@@ -1,1 +1,1 @@
-linkToTweeter = 'https://twitter.com/ComcastUser3301/status/'
+linkToTwitter = 'https://twitter.com/ComcastUser3301/status/'

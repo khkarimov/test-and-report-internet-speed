@@ -13,7 +13,7 @@ cwd = os.getcwd() # cwd = current work directory
 
 def configureApi():
     # Fill in the values noted in previous step here
-    cfg = json.load(open(cwd + '/tweeter_config.json'))
+    cfg = json.load(open(cwd + '/twitter_config.json'))
 
     auth = tweepy.OAuthHandler(cfg['consumer_key'], cfg['consumer_secret'])
     auth.set_access_token(cfg['access_token'], cfg['access_token_secret'])
@@ -29,12 +29,12 @@ def postATweet(downloadSpeed, maxDownloadSpeedLimit):
     json_str = json.dumps(status._json)
     data = json.loads(json_str)
     print 'Successfully tweeted! Tweet Id:', data['id']
-    print 'Link:' + env_variable.linkToTweeter + str(data['id'])
+    print 'Link:' + env_variable.linkToTwitter + str(data['id'])
     with open(cwd + '\status.json', 'w') as outfile:
         json.dump(data, outfile)
     return str(data['id'])
 
-def deleteStatusInTweeter():
+def deleteStatusInTwitter():
     api = configureApi()
 
     status_list = api.user_timeline()
@@ -48,7 +48,7 @@ def deleteStatusInTweeter():
 def openLinkInBrowser(tweetId, downloadSpeed):
     driver = webdriver.Chrome()
     # driver.get("https://twitter.com/ComcastUser3301/status/" + tweetId)
-    driver.get(env_variable.linkToTweeter + tweetId)
+    driver.get(env_variable.linkToTwitter + tweetId)
     try:
         elem = driver.find_element_by_class_name("TweetTextSize--jumbo")
 
@@ -149,7 +149,7 @@ def test_and_write_speed(maxDownloadSpeedLimit):
             print '\n', 'Current download speed:', speedTestResult
             if speedTestResult <= acceptableSpeedLimit:
                 print '#########################################'
-                print "DOWNLOAD SPEED:", speedTestResult, ". This data is being posted to Tweeter."
+                print "DOWNLOAD SPEED:", speedTestResult, ". This data is being posted to Twitter."
                 downloadSpeed = str(speedTestResult)
                 tweetId = postATweet(downloadSpeed, maxDownloadSpeedLimit)
                 print '#########################################'
@@ -189,8 +189,8 @@ def testSpeedAndReport():
     print 'Check your internet service contract details to find out your maximum download speed.'
     print 'When you run this app, app asks you to provide acceptable speed limit(ASL) and '
     print 'it tests whether current speed is equal to or more from provided ASL.'
-    print 'if test result is less than ASL then this app generates tweeter post with test result.'
-    print 'Otherwise, it simply displays test results without posting it in tweeter.' + '\n'
+    print 'if test result is less than ASL then this app generates twitter post with test result.'
+    print 'Otherwise, it simply displays test results without posting it in twitter.' + '\n'
 
     maxNumberOfTests = 10
     start = True
@@ -219,7 +219,7 @@ def deleteLastFiveTweets():
     i = 1
     try:
         while i < counter:
-            i, deleteStatusInTweeter()
+            i, deleteStatusInTwitter()
             i += 1
     except:
         print 'No More Tweet To Delete'
