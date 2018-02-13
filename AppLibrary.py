@@ -42,8 +42,9 @@ def deleteStatusInTwitter():
     json_str = json.dumps(status._json)
 
     data = json.loads(json_str)
-    print data['id'], data['text'], 'is deleted'
     status = api.destroy_status(id=data['id'])
+    result = str(data['id']) + ' ' + str(data['text']) + ' is deleted'
+    return result
 
 def openLinkInBrowser(tweetId, downloadSpeed):
     driver = webdriver.Chrome()
@@ -217,8 +218,8 @@ def deleteLastFiveTweets():
     i = 1
     try:
         while i <= counter:
-            print i
-            deleteStatusInTwitter()
+            result = deleteStatusInTwitter()
+            print i, result
             i += 1
     except:
         print 'No More Tweet To Delete'
