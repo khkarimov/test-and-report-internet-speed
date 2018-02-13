@@ -62,7 +62,7 @@ def openLinkInBrowser(tweetId, downloadSpeed):
         print 'openLinkInBrowser function failed. Exception Thrown'
         driver.quit()
 
-def askUserToProvideASTL(maxDownloadSpeedLimit):
+def askUserToProvideASL(maxDownloadSpeedLimit):
     maxDownloadSpeedLimit = float(maxDownloadSpeedLimit)
     tryAgain = True
     while tryAgain:
@@ -132,10 +132,8 @@ def runSpeedTest():
         print 'Speed Test failed. Please check your internet connection'
         return None
 
-
-
 def test_and_write_speed(maxDownloadSpeedLimit):
-    acceptableSpeedLimit = askUserToProvideASTL(maxDownloadSpeedLimit)
+    acceptableSpeedLimit = askUserToProvideASL(maxDownloadSpeedLimit)
 
     if acceptableSpeedLimit is None:
         print '\n' + 'Thank you for using "Report Your Low Speed To Comcast" app!'
@@ -183,6 +181,7 @@ def scheduled_speed_test(maxNumberOfTests):
             sys.exit()
 
 def testSpeedAndReport():
+
     print 'This app tests internet speed. Internet provider should provide 70MB download speed maximum.'
     print 'Maximum download speed varies on every user based on purchased plan.'
     print 'Check your internet service contract details to find out your maximum download speed.'
