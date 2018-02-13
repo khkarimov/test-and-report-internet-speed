@@ -132,7 +132,7 @@ def runSpeedTest():
         print 'Speed Test failed. Please check your internet connection'
         return None
 
-def test_and_write_speed(maxDownloadSpeedLimit):
+def testAndDisplayTestResults(maxDownloadSpeedLimit):
     acceptableSpeedLimit = askUserToProvideASL(maxDownloadSpeedLimit)
 
     if acceptableSpeedLimit is None:
@@ -153,16 +153,16 @@ def test_and_write_speed(maxDownloadSpeedLimit):
                 openLinkInBrowser(tweetId, downloadSpeed)
             return True
     except:
-        print 'test_and_write_speed function failed. Exception Thrown'
+        print 'testAndDisplayTestResults function failed. Exception Thrown'
         return False
 
-def scheduled_speed_test(maxNumberOfTests):
+def speedTestOrganizer(maxNumberOfTests):
     maxDownloadSpeedLimit = askUserToProvideMaxDownloadSpeedLimit()
 
-    counter = 1
+    counter = 0
     while counter < maxNumberOfTests:
-        print '\n', 'TEST #', counter, 'STARTED'
-        result = test_and_write_speed(maxDownloadSpeedLimit)
+        print '\n', 'TEST #', counter + 1, 'STARTED'
+        result = testAndDisplayTestResults(maxDownloadSpeedLimit)
         if result:
             print 'END OF TEST'
             if maxNumberOfTests != counter:
@@ -171,12 +171,12 @@ def scheduled_speed_test(maxNumberOfTests):
                 time.sleep(5)
             counter += 1
         else:
-            print 'Test #', counter, 'Failed, test will start again in 2 seconds'
+            print 'Test #', counter + 1, 'Failed, test will start again in 2 seconds'
             time.sleep(2)
             print '\n', 'TEST FAILED'
             print '-----------------------------------------------------------------------'
     if counter == maxNumberOfTests:
-            print 'Default maxNumberOfTests set to:', maxNumberOfTests - 1, ', and you reached the max run limit'
+            print 'Default maxNumberOfTests set to:', maxNumberOfTests, ', and you reached the max run limit'
             print 'Run app again if you would to test internet speed more'
             sys.exit()
 
@@ -201,7 +201,7 @@ def testSpeedAndReport():
             userInput = int(userInput)
             if userInput == 1:
                 print '-----------------------------------------------------------------------'
-                scheduled_speed_test(maxNumberOfTests)
+                speedTestOrganizer(maxNumberOfTests)
                 start = False
         except ValueError:
             if userInput == '':
