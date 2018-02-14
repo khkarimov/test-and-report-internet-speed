@@ -123,36 +123,7 @@ def askUserToProvideTotalNumberOfTestsToRun():
             else:
                 print '"', userInput, '"', 'can not be accepted. You can enter only full numbers, please try again', '\n'
             tryAgain = True
-
-
-def askUserToProvideMaxDownloadSpeedLimit():
-    tryAgain = True
-    while tryAgain:
-        try:
-            userInput = raw_input('Enter the MAXIMUM internet download speed: ' + '\n')
-
-            userInput = int(userInput)
-
-            if len(str(userInput)) > 3:
-                print 'Maximum download speed should not be more than 3 digits. Try again.' + '\n'
-                tryAgain = True
-            elif userInput <= 0:
-                print 'Maximum download speed can NOT be less than 0 or equal to' + '\n'
-                tryAgain = True
-            else:
-                print '-----------------------------------------------------------------------'
-                print userInput, 'is accepted as maximum download speed limit'
-                tryAgain = False
-
-                maxDownloadSpeedLimit = userInput
-                return maxDownloadSpeedLimit
-        except:
-            if userInput == '':
-                print '\n', 'Input value can not be Null/Empty', '\n'
-            else:
-                print '"', userInput, '"', 'can not be accepted. You can enter only full numbers, please try again', '\n'
-            tryAgain = True            
-            
+      
 def askUserToProvideMaxDownloadSpeedLimit():
     tryAgain = True
     while tryAgain:
