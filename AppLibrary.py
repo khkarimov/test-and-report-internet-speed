@@ -99,9 +99,12 @@ def askUserToProvideASL(maxDownloadSpeedLimit):
 def askUserToProvideTotalNumberOfTestsToRun():
     tryAgain = True
     while tryAgain:
-        try:
-            userInput = raw_input('How many times would you like to run tests: ' + '\n')
+        userInput = raw_input('How many times would you like to run tests: ' + '\n')
 
+        if userInput.lower().strip(' ') == 'quit':
+            print '\n' + 'Thank you for using "Report Your Low Speed To Comcast" app!'
+            sys.exit()
+        try:
             userInput = int(userInput)
 
             if len(str(userInput)) > 2:
