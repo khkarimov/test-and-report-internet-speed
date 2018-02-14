@@ -96,6 +96,34 @@ def askUserToProvideASL(maxDownloadSpeedLimit):
                 print '"', userInput, '"', 'can not be accepted. You can enter only numbers, please try again', '\n'
             tryAgain = True
 
+def askUserToProvideTotalNumberOfTestsToRun():
+    tryAgain = True
+    while tryAgain:
+        try:
+            userInput = raw_input('How many times would you like to run tests: ' + '\n')
+
+            userInput = int(userInput)
+
+            if len(str(userInput)) > 2:
+                print 'Total number of test runs can not be more than 2 digits. Try again.' + '\n'
+                tryAgain = True
+            elif userInput <= 0:
+                print 'Total number of test runs can NOT be equal to 0 or less' + '\n'
+                tryAgain = True
+            else:
+                print '-----------------------------------------------------------------------'
+                print userInput, 'is accepted'
+                tryAgain = False
+
+                totalNumberOfTestsToRun = userInput
+                return totalNumberOfTestsToRun
+        except:
+            if userInput == '':
+                print '\n', 'Input value can not be Null/Empty', '\n'
+            else:
+                print '"', userInput, '"', 'can not be accepted. You can enter only full numbers, please try again', '\n'
+            tryAgain = True
+      
 def askUserToProvideMaxDownloadSpeedLimit():
     tryAgain = True
     while tryAgain:
