@@ -2,7 +2,7 @@ import os
 import sys
 import json
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import tweepy
 import pyspeedtest
 from selenium import webdriver
@@ -277,6 +277,7 @@ def askUserToProvideLengthOfInterval():
 def runSpeedTestWithIntervals():
     numberOfTests = askUserToProvideTotalNumberOfTestsToRun()
     interval = int(askUserToProvideLengthOfInterval())
+    nextTestTime = datetime.now() + timedelta(minutes=interval)
     maxDownloadSpeed = askUserToProvideMaxDownloadSpeedLimit()
     asl = askUserToProvideASL(maxDownloadSpeed)
     if asl is None:
@@ -295,8 +296,8 @@ def runSpeedTestWithIntervals():
             i += 1
 
             if numberOfTests != i:
-                print '\n' 'next test will run in', interval, 'mins'
-                print str(datetime.now())
+                nextTestTime = datetime.now() + timedelta(minutes=interval)
+                print '\n' 'next test will run in', interval, 'mins, at:', '{:%H:%M:%S}'.format(nextTestTime)
                 print '-----------------------------------------------------------------------'
                 time.sleep(interval * 60)
         else:
