@@ -102,7 +102,7 @@ def askUserToProvideTotalNumberOfTestsToRun():
         userInput = raw_input('How many times would you like to run tests: ' + '\n')
 
         if userInput.lower().strip(' ') == 'quit':
-            print '\n' + 'Thank you for using "Report Your Low Speed To Comcast" app!'
+            print '\n' + 'Thank you for using Test And Report Internet Speed app!'
             sys.exit()
         try:
             userInput = int(userInput)
@@ -168,7 +168,7 @@ def testAndDisplayTestResults(maxDownloadSpeedLimit):
     acceptableSpeedLimit = askUserToProvideASL(maxDownloadSpeedLimit)
 
     if acceptableSpeedLimit is None:
-        print '\n' + 'Thank you for using "Report Your Low Speed To Comcast" app!'
+        print '\n' + 'Thank you for using Test And Report Internet Speed app!'
         sys.exit()
     print 'speedtest.net in progress..'
     try:
@@ -227,7 +227,7 @@ def testSpeedAndReport():
     while start:
         userInput = raw_input('Enter number 1 to start the app: ')
         if userInput.lower().strip(' ') == 'quit':
-            print '\n' + 'Thank you for using "Report Your Low Speed To Comcast" app!'
+            print '\n' + 'Thank you for using Test And Report Internet Speed app!'
             exit()
         try:
             userInput = int(userInput)
