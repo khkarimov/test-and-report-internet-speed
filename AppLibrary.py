@@ -213,7 +213,6 @@ def speedTestOrganizer(maxNumberOfTests):
             sys.exit()
 
 def testSpeedAndReport():
-
     print 'This app tests internet speed. Internet provider should provide 70MB download speed maximum.'
     print 'Maximum download speed varies on every user based on purchased plan.'
     print 'Check your internet service contract details to find out your maximum download speed.'
@@ -277,7 +276,6 @@ def askUserToProvideLengthOfInterval():
 def runSpeedTestWithIntervals():
     numberOfTests = askUserToProvideTotalNumberOfTestsToRun()
     interval = int(askUserToProvideLengthOfInterval())
-    nextTestTime = datetime.now() + timedelta(minutes=interval)
     maxDownloadSpeed = askUserToProvideMaxDownloadSpeedLimit()
     asl = askUserToProvideASL(maxDownloadSpeed)
     if asl is None:
@@ -285,13 +283,14 @@ def runSpeedTestWithIntervals():
         sys.exit()
     i = 0
     while i < numberOfTests:
-        print 'TEST #', i+1, 'STARTED'
+        print 'TEST #', i+1, 'STARTED.', 'TOTAL NUMBER OF TESTS TO RUN:', numberOfTests
         downloadSpeed = runSpeedTest()
         if downloadSpeed is not None:
             downloadSpeed = str(downloadSpeed)
             print 'Current download speed:', downloadSpeed
-            tweetId = postATweet(downloadSpeed, maxDownloadSpeed)
-            openLinkInBrowser(tweetId, downloadSpeed)
+            if float(downloadSpeed) <= asl:
+                tweetId = postATweet(downloadSpeed, maxDownloadSpeed)
+                openLinkInBrowser(tweetId, downloadSpeed)
             print 'TEST #', i + 1, 'ENDED'
             i += 1
 
