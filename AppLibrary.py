@@ -285,14 +285,12 @@ def runSpeedTestWithIntervals_old():
     while i < numberOfTests:
         print 'TEST #', i+1, 'STARTED.', 'TOTAL NUMBER OF TESTS TO RUN:', numberOfTests
         downloadSpeed = runSpeedTest()
-        downloadSpeed = 14.14
         if downloadSpeed is not None:
             downloadSpeed = str(downloadSpeed)
             print 'Current download speed:', downloadSpeed
             if float(downloadSpeed) <= asl:
                 tweetId = postATweet(downloadSpeed, maxDownloadSpeed)
                 openLinkInBrowser(tweetId, downloadSpeed)
-                pass
             print 'TEST #', i + 1, 'ENDED'
             i += 1
 
