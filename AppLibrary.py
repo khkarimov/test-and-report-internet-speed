@@ -102,7 +102,7 @@ def askUserToProvideTotalNumberOfTestsToRun():
         userInput = raw_input('How many times would you like to run tests: ' + '\n')
 
         if userInput.lower().strip(' ') == 'quit':
-            print '\n' + 'Thank you for using Test And Report Internet Speed app!'
+            print '\n' + 'Thank you for using "The Test And Report Internet Speed" app!'
             sys.exit()
         try:
             userInput = int(userInput)
@@ -168,7 +168,7 @@ def testAndDisplayTestResults(maxDownloadSpeedLimit):
     acceptableSpeedLimit = askUserToProvideASL(maxDownloadSpeedLimit)
 
     if acceptableSpeedLimit is None:
-        print '\n' + 'Thank you for using Test And Report Internet Speed app!'
+        print '\n' + 'Thank you for using "The Test And Report Internet Speed" app!'
         sys.exit()
     print 'speedtest.net in progress..'
     try:
@@ -226,7 +226,7 @@ def testSpeedAndReport():
     while start:
         userInput = raw_input('Enter number 1 to start the app: ')
         if userInput.lower().strip(' ') == 'quit':
-            print '\n' + 'Thank you for using Test And Report Internet Speed app!'
+            print '\n' + 'Thank you for using "The Test And Report Internet Speed" app!'
             exit()
         try:
             userInput = int(userInput)
@@ -273,17 +273,19 @@ def askUserToProvideLengthOfInterval():
             tryAgain = True
 
 
-def runSpeedTestWithIntervals_old():
+def runSpeedTestWithIntervals():
     numberOfTests = askUserToProvideTotalNumberOfTestsToRun()
     interval = int(askUserToProvideLengthOfInterval())
     maxDownloadSpeed = askUserToProvideMaxDownloadSpeedLimit()
     asl = askUserToProvideASL(maxDownloadSpeed)
     if asl is None:
-        print 'Thank you for using Test And Report Internet Speed app!'
+        print 'Thank you for using "The Test And Report Internet Speed" app!'
         sys.exit()
     i = 0
+    summaryData = {}
     while i < numberOfTests:
         print 'TEST #', i+1, 'STARTED.', 'TOTAL NUMBER OF TESTS TO RUN:', numberOfTests
+        print 'Speed test is in progress ...'
         downloadSpeed = runSpeedTest()
         if downloadSpeed is not None:
             downloadSpeed = str(downloadSpeed)
@@ -294,53 +296,16 @@ def runSpeedTestWithIntervals_old():
             print 'TEST #', i + 1, 'ENDED'
             i += 1
 
+            testCompleteTime = '{:%H:%M:%S}'.format(datetime.now())
+            print 'test completed at: ', testCompleteTime
+            nextTestTime = datetime.now() + timedelta(minutes=interval)
+
             if numberOfTests != i:
-                nextTestTime = datetime.now() + timedelta(minutes=interval)
                 print '\n' 'next test will run in', interval, 'mins, at:', '{:%H:%M:%S}'.format(nextTestTime)
                 print '-----------------------------------------------------------------------'
                 time.sleep(interval * 60)
-        else:
-            print 'Test #', i+1, 'Failed. App will re-try to test again in 5 seconds'
-            time.sleep(5)
-            print '\n', 'TEST FAILED'
-            print '-----------------------------------------------------------------------'
 
-    print 'Thank you for using Test And Report Internet Speed app!'
-
-def runSpeedTestWithIntervals():
-    numberOfTests = askUserToProvideTotalNumberOfTestsToRun()
-    interval = int(askUserToProvideLengthOfInterval())
-    maxDownloadSpeed = askUserToProvideMaxDownloadSpeedLimit()
-    asl = askUserToProvideASL(maxDownloadSpeed)
-    if asl is None:
-        print 'Thank you for using Test And Report Internet Speed app!'
-        sys.exit()
-    i = 0
-    testRunTimeWithTestResultDictionary = {}
-    while i < numberOfTests:
-        print 'TEST #', i+1, 'STARTED.', 'TOTAL NUMBER OF TESTS TO RUN:', numberOfTests
-        # downloadSpeed = runSpeedTest()
-        downloadSpeed = 14.14
-        if downloadSpeed is not None:
-            downloadSpeed = str(downloadSpeed)
-            print 'Current download speed:', downloadSpeed
-            if float(downloadSpeed) <= asl:
-                # tweetId = postATweet(downloadSpeed, maxDownloadSpeed)
-                # openLinkInBrowser(tweetId, downloadSpeed)
-                pass
-            print 'TEST #', i + 1, 'ENDED'
-            i += 1
-
-            nextTestTime = datetime.now() + timedelta(seconds=interval)
-            testCompleteTime = '{:%H:%M:%S}'.format(nextTestTime)
-
-            if numberOfTests != i:
-                print '\n' 'next test will run in', interval, 'mins, at:', testCompleteTime
-                print '-----------------------------------------------------------------------'
-                # time.sleep(interval * 60)
-                time.sleep(interval)
-
-            testRunTimeWithTestResultDictionary[i] = {'Test': i, 'downloadSpeed': downloadSpeed, 'time': testCompleteTime}
+            summaryData[i] = {'Test': i, 'downloadSpeed': downloadSpeed, 'time': testCompleteTime}
 
         else:
             print 'Test #', i+1, 'Failed. App will re-try to test again in 5 seconds'
@@ -348,10 +313,13 @@ def runSpeedTestWithIntervals():
             print '\n', 'TEST FAILED'
             print '-----------------------------------------------------------------------'
 
-    print '\nSUMMARY:'
+    print '\n****************************************************************'
+    print 'SUMMARY:'
     print 'Max Download Speed:', str(maxDownloadSpeed) + 'MB | Acceptable Speed Limit:', str(asl) + 'MB'
     print numberOfTests, 'tests are executed with', interval, '- minute interval.'
-    for keys in testRunTimeWithTestResultDictionary:
-        print testRunTimeWithTestResultDictionary[keys]
+    for keys in summaryData:
+        print '----------------------------------------------------------------'
+        print 'Test#', summaryData[keys]['Test'], '| Download Speed:', summaryData[keys]['downloadSpeed'], '| Time:', summaryData[keys]['time']
+    print '----------------------------------------------------------------'
 
     print '\nThank you for using "The Test And Report Internet Speed" app!'
