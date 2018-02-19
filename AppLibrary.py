@@ -11,6 +11,12 @@ import env_variable
 
 cwd = os.getcwd() # cwd = current work directory
 
+def introMessage():
+    print 'This app tests internet speed.'
+    print 'it tests whether current speed is equal to acceptable speed limit(ASL) which you will provide.'
+    print 'if test result is less than ASL then it generates twitter post with test result.'
+    print 'Otherwise, it simply displays test results without posting it in twitter.' + '\n'
+
 def configureApi():
     # Fill in the values noted in previous step here
     cfg = json.load(open(cwd + '/twitter_config.json'))
@@ -45,6 +51,17 @@ def deleteStatusInTwitter():
     status = api.destroy_status(id=data['id'])
     result = str(data['id']) + ' ' + str(data['text']) + ' is deleted'
     return result
+
+def deleteLastFiveTweets():
+    counter = 5
+    i = 1
+    try:
+        while i <= counter:
+            result = deleteStatusInTwitter()
+            print i, result
+            i += 1
+    except:
+        print 'No More Tweet To Delete'
 
 def openLinkInBrowser(tweetId, downloadSpeed):
     driver = webdriver.Chrome()
@@ -99,7 +116,7 @@ def askUserToProvideASL(maxDownloadSpeedLimit):
 def askUserToProvideTotalNumberOfTestsToRun():
     tryAgain = True
     while tryAgain:
-        userInput = raw_input('How many times would you like to run tests: ' + '\n')
+        userInput = raw_input('How many times would you like tests: ' + '\n')
 
         if userInput.lower().strip(' ') == 'quit':
             print '\n' + 'Thank you for using "The Test And Report Internet Speed" app!'
@@ -153,6 +170,24 @@ def askUserToProvideMaxDownloadSpeedLimit():
                 print '\n', 'Input value can not be Null/Empty', '\n'
             else:
                 print '"', userInput, '"', 'can not be accepted. You can enter only full numbers, please try again', '\n'
+            tryAgain = True
+
+def askUserToProvideLengthOfInterval():
+    tryAgain = True
+    while tryAgain:
+        userInput = raw_input('How often would you like to run speed test? (In minutes)' '\n')
+        if userInput.isdigit():
+            if int(userInput) <= 0:
+                print 'It should be more than 0'
+            elif len(userInput) < 3:
+                print userInput, 'is accepted. Test will run every', userInput, 'minutes'
+                tryAgain = False
+                return userInput
+            else:
+                print 'You can not enter more than 2 digits. 99 is the highest number to enter'
+                tryAgain = True
+        else:
+            print '"', userInput, '"', 'can not be accepted. You can enter only full numbers, please try again', '\n'
             tryAgain = True
 
 def runSpeedTest():
@@ -213,14 +248,7 @@ def speedTestOrganizer(maxNumberOfTests):
             sys.exit()
 
 def testSpeedAndReport():
-    print 'This app tests internet speed. Internet provider should provide 70MB download speed maximum.'
-    print 'Maximum download speed varies on every user based on purchased plan.'
-    print 'Check your internet service contract details to find out your maximum download speed.'
-    print 'When you run this app, app asks you to provide acceptable speed limit(ASL) and '
-    print 'it tests whether current speed is equal to or more from provided ASL.'
-    print 'if test result is less than ASL then this app generates twitter post with test result.'
-    print 'Otherwise, it simply displays test results without posting it in twitter.' + '\n'
-
+    introMessage()
     maxNumberOfTests = 10
     start = True
     while start:
@@ -236,42 +264,11 @@ def testSpeedAndReport():
                 start = False
         except ValueError:
             if userInput == '':
-                print '\n','Input value can not be Null/Empty', '\n'
+                print '\n' 'Input value can not be Null/Empty', '\n'
 
         print '"', userInput, '"', 'can not be accepted. You can enter only number 1 to start the app, please try again'
         print '-----------------------------------------------------------------------'
         start = True
-
-def deleteLastFiveTweets():
-    counter = 5
-    i = 1
-    try:
-        while i <= counter:
-            result = deleteStatusInTwitter()
-            print i, result
-            i += 1
-    except:
-        print 'No More Tweet To Delete'
-
-
-def askUserToProvideLengthOfInterval():
-    tryAgain = True
-    while tryAgain:
-        userInput = raw_input('How often would you like to run speed test? (In minutes)' '\n')
-        if userInput.isdigit():
-            if int(userInput) <= 0:
-                print 'It should be more than 0'
-            elif len(userInput) < 3:
-                print userInput, 'is accepted. Test will run every', userInput, 'minutes'
-                tryAgain = False
-                return userInput
-            else:
-                print 'You can not enter more than 2 digits. 99 is the highest number to enter'
-                tryAgain = True
-        else:
-            print '"', userInput, '"', 'can not be accepted. You can enter only full numbers, please try again', '\n'
-            tryAgain = True
-
 
 def runSpeedTestWithIntervals():
     numberOfTests = askUserToProvideTotalNumberOfTestsToRun()
@@ -290,6 +287,7 @@ def runSpeedTestWithIntervals():
         if downloadSpeed is not None:
             downloadSpeed = str(downloadSpeed)
             print 'Current download speed:', downloadSpeed
+            tweetId = None
             if float(downloadSpeed) <= asl:
                 tweetId = postATweet(downloadSpeed, maxDownloadSpeed)
                 openLinkInBrowser(tweetId, downloadSpeed)
@@ -305,7 +303,10 @@ def runSpeedTestWithIntervals():
                 print '-----------------------------------------------------------------------'
                 time.sleep(interval * 60)
 
-            summaryData[i] = {'Test': i, 'downloadSpeed': downloadSpeed, 'time': testCompleteTime}
+            if tweetId is not None:
+                summaryData[i] = {'test': i, 'downloadSpeed': downloadSpeed, 'time': testCompleteTime, 'tweeted': 'YES'}
+            else:
+                summaryData[i] = {'test': i, 'downloadSpeed': downloadSpeed, 'time': testCompleteTime, 'tweeted': 'NO'}
 
         else:
             print 'Test #', i+1, 'Failed. App will re-try to test again in 5 seconds'
@@ -319,7 +320,8 @@ def runSpeedTestWithIntervals():
     print numberOfTests, 'tests are executed with', interval, '- minute interval.'
     for keys in summaryData:
         print '----------------------------------------------------------------'
-        print 'Test#', summaryData[keys]['Test'], '| Download Speed:', summaryData[keys]['downloadSpeed'], '| Time:', summaryData[keys]['time']
+        print 'Test#', summaryData[keys]['test'], '| Download Speed:', summaryData[keys]['downloadSpeed'], '| Time:', summaryData[keys]['time'], \
+            '| Tweeted:', summaryData[keys]['tweeted']
     print '----------------------------------------------------------------'
 
     print '\nThank you for using "The Test And Report Internet Speed" app!'
