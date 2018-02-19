@@ -301,8 +301,7 @@ def runSpeedTestWithIntervals():
             if numberOfTests != i:
                 print '\n' 'next test will run in', interval, 'mins, at:', '{:%H:%M:%S}'.format(nextTestTime)
                 print '-----------------------------------------------------------------------'
-                # time.sleep(interval * 60)
-                time.sleep(interval)
+                time.sleep(interval * 60)
 
             if tweetId is not None:
                 summaryData[i] = {'test': i, 'downloadSpeed': downloadSpeed, 'time': testCompleteTime, 'tweeted': 'YES'}
