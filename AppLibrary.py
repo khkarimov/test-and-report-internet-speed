@@ -270,6 +270,18 @@ def testSpeedAndReport():
         print '-----------------------------------------------------------------------'
         start = True
 
+def generateSummary(maxDownloadSpeed, numberOfTests, asl, interval, summaryData):
+    print '\n****************************************************************'
+    print 'SUMMARY:'
+    print 'Max Download Speed:', str(maxDownloadSpeed) + 'MB | Acceptable Speed Limit:', str(asl) + 'MB'
+    print numberOfTests, 'tests are executed with', interval, '- minute interval.'
+    for keys in summaryData:
+        print '----------------------------------------------------------------'
+        print 'Test#', summaryData[keys]['test'], '| Download Speed:', summaryData[keys]['downloadSpeed'], '| Time:', \
+        summaryData[keys]['time'], \
+            '| Tweeted:', summaryData[keys]['tweeted']
+    print '----------------------------------------------------------------'
+
 def runSpeedTestWithIntervals():
     numberOfTests = askUserToProvideTotalNumberOfTestsToRun()
     interval = int(askUserToProvideLengthOfInterval())
@@ -314,14 +326,5 @@ def runSpeedTestWithIntervals():
             print '\n', 'TEST FAILED'
             print '-----------------------------------------------------------------------'
 
-    print '\n****************************************************************'
-    print 'SUMMARY:'
-    print 'Max Download Speed:', str(maxDownloadSpeed) + 'MB | Acceptable Speed Limit:', str(asl) + 'MB'
-    print numberOfTests, 'tests are executed with', interval, '- minute interval.'
-    for keys in summaryData:
-        print '----------------------------------------------------------------'
-        print 'Test#', summaryData[keys]['test'], '| Download Speed:', summaryData[keys]['downloadSpeed'], '| Time:', summaryData[keys]['time'], \
-            '| Tweeted:', summaryData[keys]['tweeted']
-    print '----------------------------------------------------------------'
-
+    generateSummary(maxDownloadSpeed, numberOfTests, asl, interval, summaryData)
     print '\nThank you for using "The Test And Report Internet Speed" app!'
