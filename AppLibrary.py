@@ -8,7 +8,6 @@ import pyspeedtest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import env_variable
-
 cwd = os.getcwd() # cwd = current work directory
 
 def introMessage():
@@ -28,17 +27,20 @@ def configureApi():
 
 
 def postATweet(downloadSpeed, maxDownloadSpeedLimit):
-    api = configureApi()
-    maxDownloadSpeedLimit = str(maxDownloadSpeedLimit)
-    tweet = "My current download speed: " + downloadSpeed + "MB, but my monthly plan promises: " + maxDownloadSpeedLimit + "MB download speed"
-    status = api.update_status(status=tweet)
-    json_str = json.dumps(status._json)
-    data = json.loads(json_str)
-    print 'Successfully tweeted! Tweet Id:', data['id']
-    print 'Link:' + env_variable.linkToTwitter + str(data['id'])
-    with open(cwd + '\status.json', 'w') as outfile:
-        json.dump(data, outfile)
-    return str(data['id'])
+    try:
+        api = configureApi()
+        maxDownloadSpeedLimit = str(maxDownloadSpeedLimit)
+        tweet = "My current download speed: " + downloadSpeed + "MB, but my monthly plan promises: " + maxDownloadSpeedLimit + "MB download speed"
+        status = api.update_status(status=tweet)
+        json_str = json.dumps(status._json)
+        data = json.loads(json_str)
+        print 'Successfully tweeted! Tweet Id:', data['id']
+        print 'Link:' + env_variable.linkToTwitter + str(data['id'])
+        with open(cwd + '\status.json', 'w') as outfile:
+            json.dump(data, outfile)
+        return str(data['id'])
+    except:
+        print '\n------------  postATweet function failed ----------------\n'
 
 def deleteStatusInTwitter():
     api = configureApi()
@@ -68,7 +70,6 @@ def openLinkInBrowser(tweetId, downloadSpeed):
     driver.get(env_variable.linkToTwitter + tweetId)
     try:
         elem = driver.find_element_by_class_name("TweetTextSize--jumbo")
-
         time.sleep(3)
         if downloadSpeed in elem.text:
             print "Visual Confirmation: Verified!"
@@ -77,7 +78,7 @@ def openLinkInBrowser(tweetId, downloadSpeed):
             print "Actual text in UI:", elem.text[:40], '...'
         driver.quit()
     except:
-        print 'openLinkInBrowser function failed. Exception Thrown'
+        print '\n -------- openLinkInBrowser function failed. Exception Thrown ---------\n'
         driver.quit()
 
 def askUserToProvideASL(maxDownloadSpeedLimit):
@@ -302,7 +303,8 @@ def runSpeedTestWithIntervals():
             tweetId = None
             if float(downloadSpeed) <= asl:
                 tweetId = postATweet(downloadSpeed, maxDownloadSpeed)
-                openLinkInBrowser(tweetId, downloadSpeed)
+                if tweetId is not None:
+                    openLinkInBrowser(tweetId, downloadSpeed)
             print 'TEST #', i + 1, 'ENDED'
             i += 1
 
