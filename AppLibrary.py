@@ -40,7 +40,7 @@ def postATweet(downloadSpeed, maxDownloadSpeedLimit):
             json.dump(data, outfile)
         return str(data['id'])
     except:
-        print 'postATweet function failed'
+        print '\n------------  postATweet function failed ----------------\n'
 
 def deleteStatusInTwitter():
     api = configureApi()
@@ -70,7 +70,6 @@ def openLinkInBrowser(tweetId, downloadSpeed):
     driver.get(env_variable.linkToTwitter + tweetId)
     try:
         elem = driver.find_element_by_class_name("TweetTextSize--jumbo")
-
         time.sleep(3)
         if downloadSpeed in elem.text:
             print "Visual Confirmation: Verified!"
@@ -79,7 +78,7 @@ def openLinkInBrowser(tweetId, downloadSpeed):
             print "Actual text in UI:", elem.text[:40], '...'
         driver.quit()
     except:
-        print 'openLinkInBrowser function failed. Exception Thrown'
+        print '\n -------- openLinkInBrowser function failed. Exception Thrown ---------\n'
         driver.quit()
 
 def askUserToProvideASL(maxDownloadSpeedLimit):
